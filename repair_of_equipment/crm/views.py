@@ -7,13 +7,12 @@ User = get_user_model()
 
 
 def index(request):
-    user = request.user
     return render(
-        request, 'index.html', {'user': user})
+        request, 'index.html', {})
 
 
 def profile_employee(request, username):
     employee = get_object_or_404(User, username=username)
     requests = Request.objects.all()
     return render(
-        request, 'mailbox.html', {'employee': employee, 'requests': requests.count()})
+        request, 'profile_employee.html', {'employee': employee, 'requests_count': requests.count(), 'requests': requests})

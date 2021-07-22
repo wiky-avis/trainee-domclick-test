@@ -236,7 +236,7 @@
                                 <li class="user-header bg-light-blue">
                                     <img src="  {% static 'img/avatar3.png' %}" class="img-circle" alt="User Image" />
                                     <p>
-                                        Jane Doe - Web Developer
+                                        {{employee.first_name}}{{employee.last_name}} - {{employee.role}}
                                         <small>Member since Nov. 2012</small>
                                     </p>
                                 </li>
@@ -299,7 +299,7 @@
                         <li class="active">
                             <a href="mailbox.html">
                                 <i class="fa fa-envelope"></i> <span>Заявки</span>
-                                <small class="badge pull-right bg-yellow">{{ requests }}</small>
+                                <small class="badge pull-right bg-yellow">{{ requests_count }}</small>
                             </a>
                         </li>
                     </ul>
@@ -382,83 +382,16 @@
                                             <div class="table-responsive">
                                                 <!-- THE MESSAGES -->
                                                 <table class="table table-mailbox">
+                                                {% for req in requests %}
                                                     <tr class="unread">
                                                         <td class="small-col"><input type="checkbox" /></td>
                                                         <td class="small-col"><i class="fa fa-star"></i></td>
-                                                        <td class="name"><a href="#">John Doe</a></td>
-                                                        <td class="subject"><a href="#">Urgent! Please read</a></td>
-                                                        <td class="time">12:30 PM</td>
+                                                        <td class="name"><a href="#">{{req.first_name}} {{req.last_name}}</a></td>
+                                                        <td class="subject"><a href="#">{{req.status}}</a></td>
+                                                        <td class="time">{{req.created}}</td>
                                                     </tr>
-                                                    <tr>
-                                                        <td class="small-col"><input type="checkbox" /></td>
-                                                        <td class="small-col"><i class="fa fa-star-o"></i></td>
-                                                        <td class="name"><a href="#">John Doe</a></td>
-                                                        <td class="subject"><a href="#">Urgent! Please read</a></td>
-                                                        <td class="time">12:30 PM</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="small-col"><input type="checkbox" /></td>
-                                                        <td class="small-col"><i class="fa fa-star-o"></i></td>
-                                                        <td class="name"><a href="#">John Doe</a></td>
-                                                        <td class="subject"><a href="#">Urgent! Please read</a></td>
-                                                        <td class="time">12:30 PM</td>
-                                                    </tr>
-                                                    <tr class="unread">
-                                                        <td class="small-col"><input type="checkbox" /></td>
-                                                        <td class="small-col"><i class="fa fa-star-o"></i></td>
-                                                        <td class="name"><a href="#">John Doe</a></td>
-                                                        <td class="subject"><a href="#">Urgent! Please read</a></td>
-                                                        <td class="time">12:30 PM</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="small-col"><input type="checkbox" /></td>
-                                                        <td class="small-col"><i class="fa fa-star"></i></td>
-                                                        <td class="name"><a href="#">John Doe</a></td>
-                                                        <td class="subject"><a href="#">Urgent! Please read</a></td>
-                                                        <td class="time">12:30 PM</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="small-col"><input type="checkbox" /></td>
-                                                        <td class="small-col"><i class="fa fa-star"></i></td>
-                                                        <td class="name"><a href="#">John Doe</a></td>
-                                                        <td class="subject"><a href="#">Urgent! Please read</a></td>
-                                                        <td class="time">12:30 PM</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="small-col"><input type="checkbox" /></td>
-                                                        <td class="small-col"><i class="fa fa-star-o"></i></td>
-                                                        <td class="name"><a href="#">John Doe</a></td>
-                                                        <td class="subject"><a href="#">Urgent! Please read</a></td>
-                                                        <td class="time">12:30 PM</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="small-col"><input type="checkbox" /></td>
-                                                        <td class="small-col"><i class="fa fa-star"></i></td>
-                                                        <td class="name"><a href="#">John Doe</a></td>
-                                                        <td class="subject"><a href="#">Urgent! Please read</a></td>
-                                                        <td class="time">12:30 PM</td>
-                                                    </tr>
-                                                    <tr class="unread">
-                                                        <td class="small-col"><input type="checkbox" /></td>
-                                                        <td class="small-col"><i class="fa fa-star-o"></i></td>
-                                                        <td class="name"><a href="#">John Doe</a></td>
-                                                        <td class="subject"><a href="#">Urgent! Please read</a></td>
-                                                        <td class="time">12:30 PM</td>
-                                                    </tr>
-                                                    <tr class="unread">
-                                                        <td class="small-col"><input type="checkbox" /></td>
-                                                        <td class="small-col"><i class="fa fa-star-o"></i></td>
-                                                        <td class="name"><a href="#">John Doe</a></td>
-                                                        <td class="subject"><a href="#">Urgent! Please read</a></td>
-                                                        <td class="time">12:30 PM</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="small-col"><input type="checkbox" /></td>
-                                                        <td class="small-col"><i class="fa fa-star-o"></i></td>
-                                                        <td class="name"><a href="#">John Doe</a></td>
-                                                        <td class="subject"><a href="#">Urgent! Please read</a></td>
-                                                        <td class="time">12:30 PM</td>
-                                                    </tr>
+                                                {% endfor %}
+
                                                 </table>
                                             </div><!-- /.table-responsive -->
                                         </div><!-- /.col (RIGHT) -->

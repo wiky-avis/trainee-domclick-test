@@ -28,7 +28,7 @@
                 {% csrf_token %}
                 
                 <div class="body bg-gray">
-                    <input type="hidden" name="next" value="{% url 'profile' user.username %}">
+                    <input type="hidden" name="next" value="{% url 'profile' request.user.username %}">
                     <div class="form-group">
                         <label for="{{ form.username.id_for_label }}">Имя пользователя</label>
                         <div class="col-md-6">
