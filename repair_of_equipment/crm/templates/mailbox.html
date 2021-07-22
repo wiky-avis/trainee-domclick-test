@@ -296,24 +296,12 @@
                     <!-- sidebar menu: : style can be found in sidebar.less -->
                     <ul class="sidebar-menu">
                         
-                        <li class="treeview">
-                            <a href="#">
-                                <i class="fa fa-table"></i> <span>Tables</span>
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="tables/simple.html"><i class="fa fa-angle-double-right"></i> Simple tables</a></li>
-                                <li><a href="tables/data.html"><i class="fa fa-angle-double-right"></i> Data tables</a></li>
-                            </ul>
-                        </li>
-                        
                         <li class="active">
                             <a href="mailbox.html">
-                                <i class="fa fa-envelope"></i> <span>Mailbox</span>
-                                <small class="badge pull-right bg-yellow">12</small>
+                                <i class="fa fa-envelope"></i> <span>Заявки</span>
+                                <small class="badge pull-right bg-yellow">{{ requests }}</small>
                             </a>
                         </li>
-                        
                     </ul>
                 </section>
                 <!-- /.sidebar -->
@@ -348,7 +336,7 @@
                                             <!-- Navigation - folders-->
                                             <div style="margin-top: 15px;">
                                                 <ul class="nav nav-pills nav-stacked">
-                                                    <li class="header">Папки</li>
+
                                                     <li class="active"><a href="#"><i class="fa fa-inbox"></i> Inbox (14)</a></li>
                                                     <li><a href="#"><i class="fa fa-pencil-square-o"></i> Drafts</a></li>
                                                     <li><a href="#"><i class="fa fa-mail-forward"></i> Sent</a></li>
@@ -550,9 +538,9 @@
         <!-- AdminLTE App -->
         <script src="{% static 'js/AdminLTE/app.js' %}" type="text/javascript"></script>
         <!-- Bootstrap WYSIHTML5 -->
-        <script src="{% static 'jsplugins//bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'js/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js' %}" type="text/javascript"></script>
         <!-- iCheck -->
-        <script src="{% static 'jsplugins//iCheck/icheck.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'js/plugins/iCheck/icheck.min.js' %}" type="text/javascript"></script>
         <!-- Page script -->
         <script type="text/javascript">
             $(function() {
