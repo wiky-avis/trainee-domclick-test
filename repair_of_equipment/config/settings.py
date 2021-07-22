@@ -122,7 +122,7 @@ EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/auth/login/'
-#LOGIN_REDIRECT_URL = '{% url "profile" request.user.username %}'
+LOGIN_REDIRECT_URL = 'profile'
 LOGOUT_REDIRECT_URL = 'index'
 
 AUTH_USER_MODEL = 'users.CustomUser'
