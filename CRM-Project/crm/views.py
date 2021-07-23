@@ -41,8 +41,6 @@ def request_detail(request, request_id):
 
 
 class DashboardView(LoginRequiredMixin, View):
-    template_name = 'crm/dashboard.html'
-    login_url = reverse_lazy('home')
 
     def get(self, request, *args, **kwargs):
         sort = request.GET.getlist('sort')
