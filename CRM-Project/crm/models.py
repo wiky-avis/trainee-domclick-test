@@ -41,7 +41,7 @@ class Request(models.Model):
     created = models.DateTimeField('Дата создания', auto_now_add=True)
 
     class Meta:
-        ordering = ('subject', 'status')
+        ordering = ('created',)
         verbose_name = 'Заявка'
         verbose_name_plural = 'Заявки'
 

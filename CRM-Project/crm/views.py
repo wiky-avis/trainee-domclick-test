@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
+from django.views.generic.base import View
 
 from .models import Request
 
@@ -39,14 +40,17 @@ def request_detail(request, request_id):
         request, 'crm/request-deatail.html', {'reqq': reqq})
 
 
-class DashboardView(LoginRequiredMixin, TemplateView):
+class DashboardView(LoginRequiredMixin, View):
     template_name = 'crm/dashboard.html'
     login_url = reverse_lazy('home')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['requests_count'] = Request.objects.all().count()
-        return context
+    def get(self, request, *args, **kwargs):
+        sort = request.GET.getlist('sort')
+        requests = Request.objects.all().order_by(*sort)
+        requests_count = Request.objects.all().count()
+        return render(
+            request, 'crm/dashboard.html', {
+                'requests': requests, 'requests_count': requests_count})
 
 
 class ProfileView(LoginRequiredMixin, TemplateView):
