@@ -1,3 +1,4 @@
+from accounts.forms import ProfileForm, UserForm
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -6,7 +7,7 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 
-from accounts.forms import ProfileForm, UserForm
+from .models import Request
 
 User = get_user_model()
 
@@ -24,6 +25,18 @@ def home(request):
 def clients(request):
     return render(
         request, 'crm/index.html', {})
+
+
+def requests(request):
+    requests = Request.objects.all()
+    return render(
+        request, 'crm/requests.html', {'requests': requests})
+
+
+def request_detail(request, request_id):
+    reqq = get_object_or_404(Request, pk=request_id)
+    return render(
+        request, 'crm/request-deatail.html', {'reqq': reqq})
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
