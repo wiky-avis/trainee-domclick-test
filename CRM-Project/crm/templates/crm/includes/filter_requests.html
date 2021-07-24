@@ -1,0 +1,51 @@
+<div class="main-toolbar-sorter f-right">
+                  <div class="toolbar-sorter">
+
+                      <form action="{% url 'filter' %}" method="get" name="filter">
+                      <!-- Start Sort Types -->
+                        <div class="form-check form-check-inline">
+                                {% for type in view.get_type_repair %}
+                                        <input type="checkbox" class="form-check-input" name="type_repair" value="{{ type }}">
+                                        <span class="span editContent">{{ type.get_subject_display }}</span>
+                                {% endfor %}
+
+                        </div>
+                        <div class="form-check form-check-inline">
+                                {% for type in view.get_type_service %}
+                                        <input type="checkbox" class="form-check-input" name="type_service" value="{{ type }}">
+                                        <span class="span editContent">{{ type.get_subject_display }}</span>
+                                {% endfor %}
+                        </div>
+                        <div class="form-check form-check-inline">
+                                {% for type in view.get_type_consultation %}
+                                        <input type="checkbox" class="form-check-input" name="type_consultation" value="{{ type }}">
+                                        <span class="span editContent">{{ type.get_subject_display }}</span>
+                                {% endfor %}
+                        </div>
+                        <!-- End Sort Types -->
+
+                        <!-- Start Sort Statuses -->
+                        <div class="form-check form-check-inline">
+                                {% for status in view.get_status_open %}
+                                        <input type="checkbox" class="form-check-input" name="status_open" value="{{ status }}">
+                                        <span class="span editContent">{{ status.get_status_display }}</span>
+                                {% endfor %}
+                        </div>
+                        <div class="form-check form-check-inline">
+                                {% for status in view.get_status_work %}
+                                        <input type="checkbox" class="form-check-input" name="status_work" value="{{ status }}">
+                                        <span class="span editContent">{{ status.get_status_display }}</span>
+                                {% endfor %}
+                        </div>
+                        <div class="form-check form-check-inline">
+                                {% for status in view.get_status_close %}
+                                        <input type="checkbox" class="form-check-input" name="status_close" value="{{ status }}">
+                                        <span class="span editContent">{{ status.get_status_display }}</span>
+                                {% endfor %}
+                        </div>
+                        <!-- End Sort Statuses -->
+                        <button type="submit">Найти</button>
+                        
+                      </form>
+                  </div>
+                </div>

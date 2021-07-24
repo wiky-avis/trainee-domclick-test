@@ -19,7 +19,7 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Заявки</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{requests_count}}</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{object_list.count}}</div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-home fa-2x text-gray-300"></i>
@@ -52,25 +52,14 @@
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                <h3 class="h3 mb-0 text-gray-800">Все Заявки</h3>
 
-                <div class="main-toolbar-sorter f-right">
-                  <div class="toolbar-sorter">
-                  <form method="get">
-                      <button type="submit" class="btn btn-light">Сортировать</button>
-                      <select class="sorter" name="sort">
-                          <option name="sort" value="subject" {{ by_subject.get_subject_display }}>По типу</option>
-                          <option name="sort" value="created" {{ by_created }}>По дате</option>
-                          <option name="sort" value="-status" {{ by_status.get_status_display }}>По статусу</option>
-                      </select>
-                  </form>
-                  </div>
-                </div>
+                {% include 'crm/includes/filter_requests.html' with post=post %}
 
             </div>
             <div class="card-body">
               <div class="table-responsive">
 
                 <table  class="table table-hover" id="dataTable" width="100%" cellspacing="0">
-                {% if requests %}
+                {% if object_list %}
                   <thead>
                     <tr>
                       <th>Имя</th>
@@ -92,7 +81,7 @@
                     </tr>
                   </tfoot>
                   <tbody>
-                    {% for req in requests %}
+                    {% for req in object_list %}
                     
                         <tr>
                         <td><a href='{% url "request-detail" request_id=req.id %}'>{{ req.first_name }} {{ req.last_name }}</a></td>

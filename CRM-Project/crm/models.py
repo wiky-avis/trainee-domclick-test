@@ -14,7 +14,7 @@ class Request(models.Model):
     TYPE = [
         (REPAIR, 'Заявка на ремонт'),
         (SERVICE, 'Заявка на обслуживание'),
-        (CONSULTATION, 'Заявка на консультацию')
+        (CONSULTATION, 'Заявка на консультацию'),
     ]
 
     STATUS = [
@@ -27,7 +27,7 @@ class Request(models.Model):
         'Тип заявки',
         max_length=20,
         choices=TYPE,
-        default='Выберите тип заявки'
+        default=CONSULTATION
         )
     status = models.CharField(
         'Статус заявки', max_length=20, choices=STATUS, default=OPEN
@@ -47,27 +47,3 @@ class Request(models.Model):
 
     def __str__(self):
         return self.subject
-
-    @property
-    def is_repair(self):
-        return self.subject == self.REPAIR
-
-    @property
-    def is_service(self):
-        return self.subject == self.SERVICE
-
-    @property
-    def is_consultation(self):
-        return self.subject == self.CONSULTATION
-
-    @property
-    def is_open(self):
-        return self.status == self.OPEN
-
-    @property
-    def is_work(self):
-        return self.status == self.WORK
-
-    @property
-    def is_close(self):
-        return self.status == self.CLOSE
