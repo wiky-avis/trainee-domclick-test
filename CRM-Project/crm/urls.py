@@ -13,6 +13,26 @@ urlpatterns = [
         name='profile-update'
         ),
     path('profile/', views.ProfileView.as_view(), name='profile'),
+    path('clients/', views.ClientsView.as_view(), name='clients'),
+    path(
+        'clients/new/', views.CreateNewClientView.as_view(), name='new_client'
+        ),
+    path(
+        'client-profile/<int:pk>/',
+        views.ClientProfileView.as_view(),
+        name='client_profile'
+        ),
+    path(
+        'client-profile/<int:pk>/update/',
+        views.ClientProfileUpdateView.as_view(),
+        name='client_profile_update'
+        ),
+    path(
+        'client-profile/<int:pk>/delete/',
+        views.DeleteClientView.as_view(),
+        name='client_profile_delete'
+        ),
+    path('colleagues/', views.ColleaguesView.as_view(), name='colleagues'),
     path(
         'send-request/',
         views.ClientSendRequestView.as_view(),

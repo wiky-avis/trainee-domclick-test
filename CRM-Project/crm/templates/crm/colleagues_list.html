@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+            <h1 class="h3 mb-0 text-gray-800">Панель управления</h1>
+        </div>          
+
+        <!-- Main Content Here -->
+          <div class="row">
+
+            <!-- Company Card Example -->
+        <div class="container-fluid">     
+
+          <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+               <h3 class="h3 mb-0 text-gray-800">Все Коллеги</h3>
+
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+
+                <table  class="table table-hover" id="dataTable" width="100%" cellspacing="0">
+                {% if object_list %}
+                  <thead>
+                    <tr>
+                      <th>Имя</th>
+                      <th>Почта</th>
+                      <th>Телефон</th>
+                      <th>Должность</th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th>Имя</th>
+                      <th>Почта</th>
+                      <th>Телефон</th>
+                      <th>Должность</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                    {% for obj in object_list %}
+                        <tr>
+                        <td>{{ obj.first_name }} {{ obj.last_name }}</td>
+                        <td>{{ obj.email }}</td>
+                        <td>{{ obj.profile.phone }}</td>
+                        <td>{{ obj.profile.get_role_display }}</td>
+                        </tr>
+                    {% endfor %}
+                  </tbody>
+                  {% else %}
+                  <tr>Заявок нет</tr>
+                  {% endif %}
+                </table>
+
+              </div>
+            </div>
+          </div>
+    </div>
+    <!-- /.container-fluid -->
+{% endblock content %}

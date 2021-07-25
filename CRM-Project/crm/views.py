@@ -6,8 +6,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView, TemplateView, DeleteView
 
-from accounts.forms import ProfileForm, UserForm
-from accounts.models import Profile
+from accounts.forms import ProfileForm, UserForm, ClientProfileForm
+from accounts.models import Profile, ClientProfile
 
 from .filters import FilterRequestsDashboardView, FilterRequestsView
 from .forms import RequestForm, ClientSendRequestForm, CreateNewRequestForm
@@ -22,6 +22,12 @@ class IndexView(TemplateView):
 
 class HomeView(TemplateView):
     template_name = 'crm/home.html'
+
+
+class ColleaguesView(LoginRequiredMixin, ListView):
+    model = User
+    queryset = User.objects.all()
+    template_name = 'crm/colleagues_list.html'
 
 
 class ClientSendRequestView(TemplateView):
@@ -170,5 +176,69 @@ class ProfileUpdateView(LoginRequiredMixin, TemplateView):
         return self.post(request, *args, **kwargs)
 
 
-def client_redirect(request):
-    return render(request, 'crm/create_request_done.html', status=200)
+class ClientsView(LoginRequiredMixin, ListView):
+    model = ClientProfile
+    queryset = ClientProfile.objects.all()
+    template_name = 'crm/clients_list.html'
+
+
+class ClientProfileView(LoginRequiredMixin, TemplateView):
+    template_name = 'crm/client_profile.html'
+
+    def get(self, request, pk, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        context['user'] = get_object_or_404(ClientProfile, pk=pk)
+        return self.render_to_response(context)
+
+
+class ClientProfileUpdateView(LoginRequiredMixin, TemplateView):
+    profile_form = ClientProfileForm
+    template_name = 'crm/client_profile-update.html'
+
+    def post(self, request, pk):
+        post_data = request.POST or None
+        client = get_object_or_404(ClientProfile, pk=pk)
+        profile_form = ClientProfileForm(post_data, instance=client)
+
+        if profile_form.is_valid():
+            profile_form.save()
+            messages.error(request, 'Профиль клиента успешно обновлен!')
+            return redirect('client_profile', client.pk)
+
+        context = self.get_context_data(profile_form=profile_form, client=client)
+        return self.render_to_response(context)
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+
+class CreateNewClientView(LoginRequiredMixin, TemplateView):
+    profile_form = ClientProfileForm
+    template_name = 'crm/new_client.html'
+
+    def post(self, request):
+        post_data = request.POST or None
+        profile_form = ClientProfileForm(post_data)
+
+        if profile_form.is_valid():
+            profile_form.save()
+            messages.error(request, 'Клиент успешно создан!')
+            return redirect('clients')
+
+        context = self.get_context_data(profile_form=profile_form)
+        return self.render_to_response(context)
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+
+class DeleteClientView(LoginRequiredMixin, DeleteView):
+    model = ClientProfile
+
+    def post(self, request, pk):
+        req = get_object_or_404(ClientProfile, pk=pk)
+        req.delete()
+        return redirect('clients')
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)

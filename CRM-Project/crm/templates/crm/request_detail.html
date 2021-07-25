@@ -25,7 +25,7 @@
                 <p><strong>Телеграм: </strong> {{ request.telegram }} </p>
                 <p><strong>Описание: </strong> {{ request.description }} </p>
                 <a href="{% url 'request_update' request.pk %}" class="btn btn-sm btn-primary shadow-sm">Обновить Заявку</a>
-                <a href="{% url 'request_delete' request.pk %}" class="btn btn-sm btn-primary shadow-sm">Удалить Заявку</a>
+                <a href="{% url 'request_delete' request.pk %}" class="btn btn-sm btn-danger shadow-sm">Удалить Заявку</a>
             </div>
           </div>
         </div>
