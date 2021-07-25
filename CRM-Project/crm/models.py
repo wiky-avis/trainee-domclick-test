@@ -5,7 +5,7 @@ class Request(models.Model):
 
     REPAIR = 'repair'
     SERVICE = 'service'
-    CONSULTATION = 'consultation'
+    CONSULTATION = 'consultant'
 
     OPEN = 'open'
     WORK = 'work'

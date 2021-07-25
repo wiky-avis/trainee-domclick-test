@@ -3,102 +3,91 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
-from django.views.generic.base import View
-from django.views.generic import ListView
-from django.db.models import Q
-from django.views.generic import ListView
-import django_filters
-from django_filters import widgets
-from django.db import models
-from django import forms
-
+from django.views.generic import ListView, DetailView
+from .filters import FilterRequestsDashboardView, FilterRequestsView
 
 from .models import Request
+from accounts.models import Profile
+from .forms import RequestForm
 
 User = get_user_model()
 
 
-def index(request):
-    return render(
-        request, 'crm/index.html', {})
+class IndexView(TemplateView):
+    template_name = 'crm/index.html'
 
 
-def home(request):
-    return render(
-        request, 'crm/home.html', {})
+class HomeView(TemplateView):
+    template_name = 'crm/home.html'
 
 
-def clients(request):
-    return render(
-        request, 'crm/index.html', {})
+class ClientsView(LoginRequiredMixin, TemplateView):
+    template_name = 'crm/create_request.html'
 
 
-def requests(request):
-    requests = Request.objects.all()
-    return render(
-        request, 'crm/requests.html', {'requests': requests})
+class RequestsView(LoginRequiredMixin, ListView):
+    model = Request
+    queryset = Request.objects.all()
+    template_name = 'crm/requests.html'
+
+    def get_context_data(self, *args, **kwargs):
+        profile = get_object_or_404(Profile, pk=self.request.user.id)
+        context = super().get_context_data(*args, **kwargs)
+        context['filter'] = FilterRequestsView(
+            self.request.GET,
+            queryset=Request.objects.filter(subject=profile.role)
+            )
+        return context
 
 
-def request_detail(request, request_id):
-    reqq = get_object_or_404(Request, pk=request_id)
-    return render(
-        request, 'crm/request-deatail.html', {'reqq': reqq})
+class RequestDetailView(LoginRequiredMixin, DetailView):
+    model = Request
+    queryset = Request.objects.all()
+    template_name = 'crm/request_detail.html'
+    context_object_name = 'request'
 
 
-from distutils.util import strtobool
+class RequestUpdateView(LoginRequiredMixin, TemplateView):
+    request_form = RequestForm
+    template_name = 'crm/request_update.html'
+    context_object_name = 'request'
 
-OPEN = 'open'
-WORK = 'work'
-CLOSE = 'close'
+    def post(self, request, pk):
+        post_data = request.POST or None
+        req = get_object_or_404(Request, pk=pk)
+        request_form = RequestForm(post_data, instance=req)
 
-STATUS = [
-    (OPEN, 'Открыта'),
-    (WORK, 'В работе'),
-    (CLOSE, 'Закрыта')
-]
+        if request_form.is_valid():
+            request_form.save()
+            messages.error(request, 'Заявка успешно обновлена!')
+            return redirect('request_update', req.pk)
 
+        context = self.get_context_data(request_form=request_form)
 
-class FilterRequestsView(django_filters.FilterSet):
-    status = django_filters.MultipleChoiceFilter(
-        field_name='status',
-        choices=STATUS,
-        label=('Статус заявки:')
-        )
-    specific_date = django_filters.DateFilter(
-        field_name='created',
-        lookup_expr='date',
-        widget=forms.SelectDateWidget(),
-        label=('Конкретная дата:')
-        )
-    start_date = django_filters.DateFilter(
-        field_name='created',
-        lookup_expr=('date__gt'),
-        widget=forms.SelectDateWidget(),
-        label=('Дата больше чем:')
-        )
-    end_date = django_filters.DateFilter(
-        field_name='created',
-        lookup_expr=('date__lt'),
-        widget=forms.SelectDateWidget(),
-        label=('Дата меньше чем:')
-        )
+        return self.render_to_response(context)
 
-    class Meta:
-        model = Request
-        fields = ['subject']
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['request'] = get_object_or_404(
+            Request, pk=self.kwargs.get('pk')
+            )
+        return context
 
 
-class DashboardView(ListView):
+class DashboardView(LoginRequiredMixin, ListView):
     model = Request
     queryset = Request.objects.all()
     template_name = 'crm/dashboard.html'
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context['filter'] = FilterRequestsView(
+        context['filter'] = FilterRequestsDashboardView(
             self.request.GET, queryset=Request.objects.all())
         return context
 
@@ -113,10 +102,8 @@ class ProfileUpdateView(LoginRequiredMixin, TemplateView):
     template_name = 'crm/profile-update.html'
 
     def post(self, request):
-
         post_data = request.POST or None
         file_data = request.FILES or None
-
         user_form = UserForm(post_data, instance=request.user)
         profile_form = ProfileForm(
             post_data, file_data, instance=request.user.profile)
@@ -128,9 +115,9 @@ class ProfileUpdateView(LoginRequiredMixin, TemplateView):
             return HttpResponseRedirect(reverse_lazy('profile'))
 
         context = self.get_context_data(
-                                        user_form=user_form,
-                                        profile_form=profile_form
-                                    )
+            user_form=user_form,
+            profile_form=profile_form
+            )
 
         return self.render_to_response(context)
 

@@ -11,14 +11,12 @@ class Profile(models.Model):
     REPAIR_SPECIALIST = 'repair'
     SERVICE_SPECIALIST = 'service'
     CONSULTANT_SPECIALIST = 'consultant'
-    ADMIN = 'administrator'
 
     ROLES = [
         (REPAIR_SPECIALIST, 'Специалист по ремонту'),
         (SERVICE_SPECIALIST, 'Специалист по обслуживанию'),
         (CONSULTANT_SPECIALIST, 'Консультант'),
         (USER, 'Пользователь без доступа в CRM'),
-        (ADMIN, 'Администратор')
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)

@@ -16,7 +16,8 @@
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
-            <h1 class="h3 mb-0 text-gray-800">Заявки</h1>
+            {% include 'crm/includes/filter_requests.html' with post=post %}
+            
 
           </div>          
 
@@ -25,13 +26,13 @@
           <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 
-              <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Выгрузить в файл</a>
+              <h1 class="h3 mb-0 text-gray-800">Мои Заявки</h1>
             </div>
             <div class="card-body">
               <div class="table-responsive">
 
                 <table  class="table table-hover" id="dataTable" width="100%" cellspacing="0">
-                {% if requests %}
+                {% if object_list %}
                   <thead>
                     <tr>
                       <th>Имя</th>
@@ -51,14 +52,15 @@
                     </tr>
                   </tfoot>
                   <tbody>
-                    {% for req in requests %}
+                    {% for obj in filter.qs %}
                     
                         <tr>
-                        <td><a href='{% url "request-detail" request_id=req.id %}'>{{ req.first_name }} {{ req.last_name }}</a></td>
-                        <td>{{ req.email }}</td>
-                        <td>{{ req.phone }}</td>
-                        <td>{{ req.created }}</td>
-                        <td>{{ req.get_status_display }}</td>
+                        <td><a href='{% url "request-detail" obj.pk %}'>{{ obj.first_name }} {{ obj.last_name }}</a></td>
+                        <td>{{ obj.email }}</td>
+                        <td>{{ obj.phone }}</td>
+                        <td>{{ obj.created }}</td>
+                        <td>{{ obj.get_status_display }}</td>
+                        <td>{{ obj.get_subject_display }}</td>
                         </tr>
                     
                     {% endfor %}
