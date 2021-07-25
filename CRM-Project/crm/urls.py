@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.generic import TemplateView
 
 from . import views
 
@@ -12,8 +13,13 @@ urlpatterns = [
         name='profile-update'
         ),
     path('profile/', views.ProfileView.as_view(), name='profile'),
-    path('clients/', views.ClientsView.as_view(), name='clients'),
+    path(
+        'send-request/',
+        views.ClientSendRequestView.as_view(),
+        name='client_send_request'
+        ),
     path('requests/', views.RequestsView.as_view(), name='requests'),
+    path('requests/new/', views.CreateRequestView.as_view(), name='new_request'),
     path(
         'requests/<int:pk>/',
         views.RequestDetailView.as_view(),
@@ -22,4 +28,9 @@ urlpatterns = [
         'requests/<int:pk>/update/',
         views.RequestUpdateView.as_view(),
         name='request_update'),
+    path(
+        'send-request-succes/',
+        TemplateView.as_view(template_name='crm/create_request_done.html'),
+        name='send-request-succes'
+    ),
 ]

@@ -1,17 +1,17 @@
-from accounts.forms import ProfileForm, UserForm
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView
-from django.views.generic import ListView, DetailView
-from .filters import FilterRequestsDashboardView, FilterRequestsView
+from django.views.generic import DetailView, ListView, TemplateView
 
-from .models import Request
+from accounts.forms import ProfileForm, UserForm
 from accounts.models import Profile
-from .forms import RequestForm
+
+from .filters import FilterRequestsDashboardView, FilterRequestsView
+from .forms import RequestForm, ClientSendRequestForm, CreateNewRequestForm
+from .models import Request
 
 User = get_user_model()
 
@@ -24,8 +24,44 @@ class HomeView(TemplateView):
     template_name = 'crm/home.html'
 
 
-class ClientsView(LoginRequiredMixin, TemplateView):
+class ClientSendRequestView(TemplateView):
+    request_form = ClientSendRequestForm
     template_name = 'crm/create_request.html'
+
+    def post(self, request):
+        post_data = request.POST or None
+        send_request_form = ClientSendRequestForm(post_data)
+
+        if send_request_form.is_valid():
+            send_request_form.save()
+            messages.error(request, 'Заявка успешно создана!')
+            return redirect('send-request-succes')
+
+        context = self.get_context_data(send_request_form=send_request_form)
+        return self.render_to_response(context)
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+
+class CreateRequestView(LoginRequiredMixin, TemplateView):
+    new_request_form = CreateNewRequestForm
+    template_name = 'crm/new_request.html'
+
+    def post(self, request):
+        post_data = request.POST or None
+        new_request_form = CreateNewRequestForm(post_data)
+
+        if new_request_form.is_valid():
+            new_request_form.save()
+            messages.error(request, 'Заявка успешно создана!')
+            return redirect('send-request-succes')
+
+        context = self.get_context_data(new_request_form=new_request_form)
+        return self.render_to_response(context)
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
 
 
 class RequestsView(LoginRequiredMixin, ListView):
@@ -53,7 +89,6 @@ class RequestDetailView(LoginRequiredMixin, DetailView):
 class RequestUpdateView(LoginRequiredMixin, TemplateView):
     request_form = RequestForm
     template_name = 'crm/request_update.html'
-    context_object_name = 'request'
 
     def post(self, request, pk):
         post_data = request.POST or None
@@ -66,7 +101,6 @@ class RequestUpdateView(LoginRequiredMixin, TemplateView):
             return redirect('request_update', req.pk)
 
         context = self.get_context_data(request_form=request_form)
-
         return self.render_to_response(context)
 
     def get(self, request, *args, **kwargs):
@@ -118,8 +152,11 @@ class ProfileUpdateView(LoginRequiredMixin, TemplateView):
             user_form=user_form,
             profile_form=profile_form
             )
-
         return self.render_to_response(context)
 
     def get(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
+
+
+def client_redirect(request):
+    return render(request, 'crm/create_request_done.html', status=200)

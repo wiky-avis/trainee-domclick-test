@@ -36,12 +36,20 @@ class Request(models.Model):
     last_name = models.CharField('Фамилия', max_length=255)
     email = models.EmailField('Электронная почта')
     phone = models.CharField('Телефон', max_length=20)
-    telegram = models.CharField('Телеграм', max_length=20)
+    telegram = models.CharField(
+        'Телеграм', max_length=20, null=True, blank=True
+        )
+    notifications = models.BooleanField(
+        'Хочу получать уведомления на telegram', default=False
+        )
     description = models.TextField('Текст заявки')
     created = models.DateTimeField('Дата создания', auto_now_add=True)
+    data_processing = models.BooleanField(
+        'Согласие на обработку персональных данных', default=False
+        )
 
     class Meta:
-        ordering = ('created',)
+        ordering = ('-created',)
         verbose_name = 'Заявка'
         verbose_name_plural = 'Заявки'
 
