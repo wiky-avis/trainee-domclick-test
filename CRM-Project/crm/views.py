@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, ListView, TemplateView
+from django.views.generic import DetailView, ListView, TemplateView, DeleteView
 
 from accounts.forms import ProfileForm, UserForm
 from accounts.models import Profile
@@ -55,10 +55,22 @@ class CreateRequestView(LoginRequiredMixin, TemplateView):
         if new_request_form.is_valid():
             new_request_form.save()
             messages.error(request, 'Заявка успешно создана!')
-            return redirect('send-request-succes')
+            return redirect('dashboard')
 
         context = self.get_context_data(new_request_form=new_request_form)
         return self.render_to_response(context)
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+
+class RequestDeleteView(LoginRequiredMixin, DeleteView):
+    model = Request
+
+    def post(self, request, pk):
+        req = get_object_or_404(Request, pk=pk)
+        req.delete()
+        return redirect('requests')
 
     def get(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)

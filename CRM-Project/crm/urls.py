@@ -29,6 +29,10 @@ urlpatterns = [
         views.RequestUpdateView.as_view(),
         name='request_update'),
     path(
+        'requests/<int:pk>/delete/',
+        views.RequestDeleteView.as_view(),
+        name='request_delete'),
+    path(
         'send-request-succes/',
         TemplateView.as_view(template_name='crm/create_request_done.html'),
         name='send-request-succes'

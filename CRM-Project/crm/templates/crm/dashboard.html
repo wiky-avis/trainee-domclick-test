@@ -50,7 +50,7 @@
                   <tbody>
                     {% for obj in filter.qs %}
                         <tr>
-                        <td><a href='{% url "request-detail" obj.pk %}'>{{ obj.first_name }} {{ obj.last_name }}</a></td>
+                        <td>{{ obj.first_name }} {{ obj.last_name }}</td>
                         <td>{{ obj.email }}</td>
                         <td>{{ obj.phone }}</td>
                         <td>{{ obj.created }}</td>
