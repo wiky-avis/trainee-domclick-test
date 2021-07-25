@@ -13,46 +13,12 @@
           <div class="row">
 
             <!-- Company Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Заявки</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{object_list.count}}</div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-home fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Contact Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Сотрудники</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">4</div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-comments fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            {% include 'crm/includes/filter_requests.html' with post=post %}
         <div class="container-fluid">     
 
           <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                <h3 class="h3 mb-0 text-gray-800">Все Заявки</h3>
-
-                {% include 'crm/includes/filter_requests.html' with post=post %}
 
             </div>
             <div class="card-body">
@@ -81,23 +47,22 @@
                     </tr>
                   </tfoot>
                   <tbody>
-                    {% for req in object_list %}
-                    
+                    {% for obj in filter.qs %}
                         <tr>
-                        <td><a href='{% url "request-detail" request_id=req.id %}'>{{ req.first_name }} {{ req.last_name }}</a></td>
-                        <td>{{ req.email }}</td>
-                        <td>{{ req.phone }}</td>
-                        <td>{{ req.created }}</td>
-                        <td>{{ req.get_subject_display }}</td>
-                        <td>{{ req.get_status_display }}</td>
+                        <td><a href='{% url "request-detail" request_id=obj.id %}'>{{ obj.first_name }} {{ obj.last_name }}</a></td>
+                        <td>{{ obj.email }}</td>
+                        <td>{{ obj.phone }}</td>
+                        <td>{{ obj.created }}</td>
+                        <td>{{ obj.get_subject_display }}</td>
+                        <td>{{ obj.get_status_display }}</td>
                         </tr>
-                    
                     {% endfor %}
                   </tbody>
                   {% else %}
                   <tr>Заявок нет</tr>
                   {% endif %}
                 </table>
+
               </div>
             </div>
           </div>

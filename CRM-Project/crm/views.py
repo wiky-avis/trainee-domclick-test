@@ -10,6 +10,10 @@ from django.views.generic.base import View
 from django.views.generic import ListView
 from django.db.models import Q
 from django.views.generic import ListView
+import django_filters
+from django_filters import widgets
+from django.db import models
+from django import forms
 
 
 from .models import Request
@@ -44,77 +48,58 @@ def request_detail(request, request_id):
         request, 'crm/request-deatail.html', {'reqq': reqq})
 
 
-class TypeStatus:
+from distutils.util import strtobool
 
-    def get_type_repair(self):
-        return Request.objects.filter(subject=Request.REPAIR)
+OPEN = 'open'
+WORK = 'work'
+CLOSE = 'close'
 
-    def get_type_service(self):
-        return Request.objects.filter(subject=Request.SERVICE)
-
-    def get_type_consultation(self):
-        return Request.objects.filter(subject=Request.CONSULTATION)
-
-    def get_status_open(self):
-        return Request.objects.filter(subject=Request.REPAIR)
-
-    def get_status_work(self):
-        return Request.objects.filter(subject=Request.SERVICE)
-
-    def get_status_close(self):
-        return Request.objects.filter(subject=Request.CONSULTATION)
-
-    def get_all(self):
-        return Request.objects.all()
+STATUS = [
+    (OPEN, 'Открыта'),
+    (WORK, 'В работе'),
+    (CLOSE, 'Закрыта')
+]
 
 
-class DashboardView(TypeStatus, ListView):
+class FilterRequestsView(django_filters.FilterSet):
+    status = django_filters.MultipleChoiceFilter(
+        field_name='status',
+        choices=STATUS,
+        label=('Статус заявки:')
+        )
+    specific_date = django_filters.DateFilter(
+        field_name='created',
+        lookup_expr='date',
+        widget=forms.SelectDateWidget(),
+        label=('Конкретная дата:')
+        )
+    start_date = django_filters.DateFilter(
+        field_name='created',
+        lookup_expr=('date__gt'),
+        widget=forms.SelectDateWidget(),
+        label=('Дата больше чем:')
+        )
+    end_date = django_filters.DateFilter(
+        field_name='created',
+        lookup_expr=('date__lt'),
+        widget=forms.SelectDateWidget(),
+        label=('Дата меньше чем:')
+        )
+
+    class Meta:
+        model = Request
+        fields = ['subject']
+
+
+class DashboardView(ListView):
     model = Request
     queryset = Request.objects.all()
     template_name = 'crm/dashboard.html'
 
-
-class FilterRequestsView(TypeStatus, ListView):
-    template_name = 'crm/dashboard.html'
-    paginate_by = 5
-
-    def get_queryset(self):
-        queryset = Request.objects.filter(
-            Q(subject__in=self.request.GET.getlist('type_repair')) |
-            Q(subject__in=self.request.GET.getlist('type_service')) |
-            Q(subject__in=self.request.GET.getlist('type_consultation')) |
-            Q(status__in=self.request.GET.getlist('status_open')) |
-            Q(status__in=self.request.GET.getlist('status_work')) |
-            Q(status__in=self.request.GET.getlist('status_close'))
-            ).distinct()
-        return queryset
-
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context['type_repair'] = ''.join(
-            [f'type_repair={x}&' for x in self.request.GET.getlist(
-                'type_repair')]
-            )
-        context['type_service'] = ''.join(
-            [f'type_service={x}&' for x in self.request.GET.getlist(
-                'type_service')]
-            )
-        context['type_consultation'] = ''.join(
-            [f'type_consultation={x}&' for x in self.request.GET.getlist(
-                'type_consultation')]
-            )
-        context['status_open'] = ''.join(
-            [f'status_open={x}&' for x in self.request.GET.getlist(
-                'status_open')]
-            )
-        context['status_work'] = ''.join(
-            [f'status_work={x}&' for x in self.request.GET.getlist(
-                'status_work')]
-            )
-        context['status_close'] = ''.join(
-            [f'status_close={x}&' for x in self.request.GET.getlist(
-                'status_close')]
-            )
+        context['filter'] = FilterRequestsView(
+            self.request.GET, queryset=Request.objects.all())
         return context
 
 
