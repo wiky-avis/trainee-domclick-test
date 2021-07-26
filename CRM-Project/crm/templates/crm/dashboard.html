@@ -1,31 +1,23 @@
-{% extends 'base.html' %}
+{% extends 'crm/base.html' %}
 
 {% block content %}
-    <!-- Begin Page Content -->
-    <div class="container-fluid">
-
-        <!-- Page Heading -->
-        <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
-            <h1 class="h3 mb-0 text-gray-800">Панель управления</h1>
+    <div class='container-fluid'>
+        <div class='d-sm-flex align-items-center justify-content-between mb-4 mt-4'>
+            <h1 class='h3 mb-0 text-gray-800'>Панель управления</h1>
         </div>          
-
-        <!-- Main Content Here -->
-          <div class="row">
-
-            <!-- Company Card Example -->
+          <div class='row'>
             {% include 'crm/includes/filter_requests.html' with post=post %}
-        <div class="container-fluid">     
+        <div class='container-fluid'>     
 
-          <div class="card shadow mb-4">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-               <h3 class="h3 mb-0 text-gray-800">Все Заявки</h3>
-               <a href="{% url 'new_request' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Содать Заявку</a>
-
+          <div class='card shadow mb-4'>
+            <div class='card-header py-3 d-flex flex-row align-items-center justify-content-between'>
+               <h3 class='h3 mb-0 text-gray-800'>Все Заявки</h3>
+               <a href='{% url "new_request" %}' class='d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm'><i class='fas fa-plus fa-sm text-white-50'></i> Содать Заявку</a>
             </div>
-            <div class="card-body">
-              <div class="table-responsive">
+            <div class='card-body'>
+              <div class='table-responsive'>
 
-                <table  class="table table-hover" id="dataTable" width="100%" cellspacing="0">
+                <table  class='table table-hover' id='dataTable' width='100%' cellspacing='0'>
                 {% if object_list %}
                   <thead>
                     <tr>
@@ -67,9 +59,5 @@
               </div>
             </div>
           </div>
-        
-        
-        
     </div>
-    <!-- /.container-fluid -->
 {% endblock content %}

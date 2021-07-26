@@ -1,14 +1,14 @@
-<div class="container-fluid">
-      <div class="card shadow mb-4">
-            
-          <form method="get" name="filter">
-             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                {% for field in filter.form %}
-                        <div><div>{{ field.label }}</div>
-                        <div>{{ field }}</div></div>
-                {% endfor %}
-                <button type="submit">Найти</button>
-             </div>
-          </form>
-      </div>
+<div class='container-fluid'>
+    <div class='card shadow mb-4'>
+        
+       <form method='get' name='filter'>
+         <div class='card-header py-3 d-flex flex-row align-items-center justify-content-between'>
+           {% for field in filter.form %}
+                <div><div>{{ field.label }}</div>
+                <div>{{ field }}</div></div>
+           {% endfor %}
+           <button type='submit'>Найти</button>
+         </div>
+       </form>
     </div>
+   </div>

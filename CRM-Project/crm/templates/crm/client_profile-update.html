@@ -1,34 +1,29 @@
-{% extends 'base.html' %}
+{% extends 'crm/base.html' %}
 
 {% load crispy_forms_tags %} 
 
 {% block content %}
-    <!-- Begin Page Content -->
-    <div class="container-fluid">
-
-        <!-- Page Heading -->
-        <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
-        <h1 class="h3 mb-0 text-gray-800">Обновить профиль</h1>
+    <div class='container-fluid'>
+        <div class='d-sm-flex align-items-center justify-content-between mb-4 mt-4'>
+        <h1 class='h3 mb-0 text-gray-800'>Обновить Профиль Клиента</h1>
         </div>          
-
-        <!-- Main Content Here -->
-        <div class="card o-hidden border-0 shadow-lg my-5">
-          <div class="card-body p-0">
-            <div class="row">
-              <div class="col-lg-3"></div>
-              <div class="col-lg-6">
-                <div class="p-5">
-                  <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4">Обновить профиль клиента!</h1>
+        <div class='card o-hidden border-0 shadow-lg my-5'>
+          <div class='card-body p-0'>
+            <div class='row'>
+              <div class='col-lg-3'></div>
+              <div class='col-lg-6'>
+                <div class='p-5'>
+                  <div class='text-center'>
+                    <h1 class='h4 text-gray-900 mb-4'>Обновить профиль клиента!</h1>
                   </div>
-                  <form method="POST" enctype="multipart/form-data">
+                  <form method='POST' enctype='multipart/form-data'>
                     {% csrf_token %}
                     {{profile_form | crispy}}
-                    <button type="submit" class="btn btn-success btn-block">Обновить</button>
+                    <button type='submit' class='btn btn-success btn-block'>Обновить</button>
                   </form>
                   <hr>
-                  <div class="text-center">
-                    <a class="small" href="{% url 'client_profile' client.pk %}">Назад</a>
+                  <div class='text-center'>
+                    <a class='small' href='{% url "client_profile" client.pk %}'>Назад</a>
                   </div>
                 </div>
               </div>
@@ -37,5 +32,4 @@
         </div>
 
     </div>
-    <!-- /.container-fluid -->
 {% endblock content %}
