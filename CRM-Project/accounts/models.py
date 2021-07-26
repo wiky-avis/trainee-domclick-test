@@ -59,7 +59,7 @@ class ClientProfile(models.Model):
     email = models.EmailField('Почта')
     phone = models.CharField('Телефон', max_length=20)
     telegram = models.CharField(
-        'Телеграм', max_length=20, null=True, blank=True
+        'Телеграмм ID', max_length=20, null=True, blank=True
         )
 
     class Meta:

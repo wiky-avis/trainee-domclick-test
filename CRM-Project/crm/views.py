@@ -1,27 +1,27 @@
+from accounts.forms import ClientProfileForm, ProfileForm, UserForm
+from accounts.models import ClientProfile, Profile
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, ListView, TemplateView, DeleteView
-
-from accounts.forms import ProfileForm, UserForm, ClientProfileForm
-from accounts.models import Profile, ClientProfile
+from django.views.generic import DeleteView, DetailView, ListView, TemplateView
 
 from .filters import FilterRequestsDashboardView, FilterRequestsView
-from .forms import RequestForm, ClientSendRequestForm, CreateNewRequestForm
+from .forms import ClientSendRequestForm, CreateNewRequestForm, RequestForm
 from .models import Request
+from .telegramm import CHAT_ID, bot_client, logger, send_message
 
 User = get_user_model()
 
 
 class IndexView(TemplateView):
-    template_name = 'crm/index.html'
+    template_name = 'index.html'
 
 
 class HomeView(TemplateView):
-    template_name = 'crm/home.html'
+    template_name = 'home.html'
 
 
 class ColleaguesView(LoginRequiredMixin, ListView):
@@ -32,7 +32,7 @@ class ColleaguesView(LoginRequiredMixin, ListView):
 
 class ClientSendRequestView(TemplateView):
     request_form = ClientSendRequestForm
-    template_name = 'crm/create_request.html'
+    template_name = 'clients/create_request.html'
 
     def post(self, request):
         post_data = request.POST or None
@@ -40,6 +40,23 @@ class ClientSendRequestView(TemplateView):
 
         if send_request_form.is_valid():
             send_request_form.save()
+            try:
+                telegramm_id = send_request_form.cleaned_data.get('telegram')
+                notifications = send_request_form.cleaned_data.get(
+                    'notifications')
+                if telegramm_id and notifications is True:
+                    send_message(
+                        chat_id=telegramm_id,
+                        message='Заявка успешно создана!',
+                        bot_client=bot_client
+                        )
+            except Exception as error:
+                logger.error(f'Бот столкнулся с ошибкой: {error}')
+                send_message(
+                    message='Бот столкнулся с ошибкой',
+                    chat_id=CHAT_ID,
+                    bot_client=bot_client
+                    )
             messages.error(request, 'Заявка успешно создана!')
             return redirect('send-request-succes')
 
@@ -115,6 +132,24 @@ class RequestUpdateView(LoginRequiredMixin, TemplateView):
 
         if request_form.is_valid():
             request_form.save()
+            try:
+                telegramm_id = req.telegram
+                notifications = req.notifications
+                status = request_form.cleaned_data.get('status')
+                if telegramm_id and notifications is True:
+                    if status == 'work' or status == 'close':
+                        send_message(
+                            chat_id=telegramm_id,
+                            message=f'Статус заявки изменен на {status}',
+                            bot_client=bot_client
+                            )
+            except Exception as error:
+                logger.error(f'Бот столкнулся с ошибкой: {error}')
+                send_message(
+                    message='Бот столкнулся с ошибкой',
+                    chat_id=CHAT_ID,
+                    bot_client=bot_client
+                    )
             messages.error(request, 'Заявка успешно обновлена!')
             return redirect('request_update', req.pk)
 
@@ -132,10 +167,18 @@ class RequestUpdateView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class DashboardView(LoginRequiredMixin, ListView):
+class DashboardView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Request
     queryset = Request.objects.all()
     template_name = 'crm/dashboard.html'
+
+    def test_func(self):
+        return (
+            self.request.user.profile.is_consultant_specialist or
+            self.request.user.profile.is_repair_specialist or
+            self.request.user.profile.is_service_specialist or
+            self.request.user.is_staff
+            )
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -244,3 +287,20 @@ class DeleteClientView(LoginRequiredMixin, DeleteView):
 
     def get(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
+
+
+def page_not_found(request, exception):
+    return render(
+        request,
+        'misc/404.html',
+        {'path': request.path},
+        status=404
+    )
+
+
+def server_error(request):
+    return render(request, 'misc/500.html', status=500)
+
+
+def forbidden(request, exception):
+    return render(request, 'misc/403.html', status=403)

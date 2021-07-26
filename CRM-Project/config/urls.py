@@ -1,7 +1,13 @@
 from django.conf import settings
+from django.conf.urls import handler403, handler404, handler500
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+
+handler404 = 'crm.views.page_not_found'  # noqa
+handler500 = 'crm.views.server_error'  # noqa
+handler403 = 'crm.views.forbidden'  # noqa
+
 
 urlpatterns = [
     path('auth/', include('django.contrib.auth.urls')),

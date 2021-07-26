@@ -37,7 +37,13 @@ class Request(models.Model):
     email = models.EmailField('Электронная почта')
     phone = models.CharField('Телефон', max_length=20)
     telegram = models.CharField(
-        'Телеграм', max_length=20, null=True, blank=True
+        'Телеграмм ID',
+        max_length=20,
+        null=True,
+        blank=True,
+        help_text='Введите свой ID. Если вы не знаете свой ID, вам понадобится'
+        ' связаться с ботом @my_id_bot. Напишите ему "/start" и в ответном '
+        'сообщении вы должны получить свой уникальный номер идентификации.'
         )
     notifications = models.BooleanField(
         'Хочу получать уведомления на telegram', default=False
