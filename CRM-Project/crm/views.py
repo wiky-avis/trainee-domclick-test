@@ -4,16 +4,16 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, ListView, TemplateView, DeleteView
+from django.views.generic import DeleteView, DetailView, ListView, TemplateView
 
-from accounts.forms import ProfileForm, UserForm, ClientProfileForm
-from accounts.models import Profile, ClientProfile
+from accounts.forms import ClientProfileForm, ProfileForm, UserForm
+from accounts.models import ClientProfile, Profile
 
 from .filters import FilterRequestsDashboardView, FilterRequestsView
-from .forms import RequestForm, ClientSendRequestForm, CreateNewRequestForm
+from .forms import ClientSendRequestForm, CreateNewRequestForm, RequestForm
 from .models import Request
-from .telegramm import send_message, bot_client, CHAT_ID, logger
-
+from .telegramm import CHAT_ID, bot_client, logger, send_message
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 User = get_user_model()
 
@@ -169,10 +169,18 @@ class RequestUpdateView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class DashboardView(LoginRequiredMixin, ListView):
+class DashboardView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Request
     queryset = Request.objects.all()
     template_name = 'crm/dashboard.html'
+
+    def test_func(self):
+        return (
+            self.request.user.profile.is_consultant_specialist or
+            self.request.user.profile.is_repair_specialist or
+            self.request.user.profile.is_service_specialist or
+            self.request.user.is_staff
+            )
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -279,3 +287,20 @@ class DeleteClientView(LoginRequiredMixin, DeleteView):
 
     def get(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
+
+
+def page_not_found(request, exception):
+    return render(
+        request,
+        'misc/404.html',
+        {'path': request.path},
+        status=404
+    )
+
+
+def server_error(request):
+    return render(request, 'misc/500.html', status=500)
+
+
+def forbidden(request, exception):
+    return render(request, 'crm/misc/403.html', status=403)

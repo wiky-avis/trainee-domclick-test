@@ -1,7 +1,8 @@
-import telegram
-import os
 import logging
 import logging.config
+import os
+
+import telegram
 from dotenv import load_dotenv
 
 load_dotenv()
