@@ -58,11 +58,8 @@ class ClientProfile(models.Model):
     last_name = models.CharField('Фамилия', max_length=20)
     email = models.EmailField('Почта')
     phone = models.CharField('Телефон', max_length=20)
-    telegram = models.PositiveIntegerField(
-        'Телеграм chat ID',
-        null=True,
-        blank=True,
-        help_text='Введите свой chat ID'
+    telegram = models.CharField(
+        'Телеграмм ID', max_length=20, null=True, blank=True
         )
 
     class Meta:

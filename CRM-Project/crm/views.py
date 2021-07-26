@@ -12,6 +12,8 @@ from accounts.models import Profile, ClientProfile
 from .filters import FilterRequestsDashboardView, FilterRequestsView
 from .forms import RequestForm, ClientSendRequestForm, CreateNewRequestForm
 from .models import Request
+from .telegramm import send_message, bot_client
+
 
 User = get_user_model()
 
@@ -39,7 +41,15 @@ class ClientSendRequestView(TemplateView):
         send_request_form = ClientSendRequestForm(post_data)
 
         if send_request_form.is_valid():
+            telegramm_id = send_request_form.cleaned_data.get('telegram')
+            notifications = send_request_form.cleaned_data.get('notifications')
             send_request_form.save()
+            if telegramm_id and notifications is True:
+                send_message(
+                    chat_id=telegramm_id,
+                    message='Заявка успешно создана!',
+                    bot_client=bot_client
+                    )
             messages.error(request, 'Заявка успешно создана!')
             return redirect('send-request-succes')
 
@@ -111,10 +121,20 @@ class RequestUpdateView(LoginRequiredMixin, TemplateView):
     def post(self, request, pk):
         post_data = request.POST or None
         req = get_object_or_404(Request, pk=pk)
+        telegramm_id = req.telegram
+        notifications = req.notifications
         request_form = RequestForm(post_data, instance=req)
 
         if request_form.is_valid():
+            status = request_form.cleaned_data.get('status')
             request_form.save()
+            if telegramm_id and notifications is True:
+                if status == 'work' or status == 'close':
+                    send_message(
+                        chat_id=telegramm_id,
+                        message=f'Статус заявки изменен на {status}',
+                        bot_client=bot_client
+                        )
             messages.error(request, 'Заявка успешно обновлена!')
             return redirect('request_update', req.pk)
 
