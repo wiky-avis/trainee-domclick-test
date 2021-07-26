@@ -46,25 +46,10 @@ def request_detail(request, request_id):
 
 class TypeStatus:
 
-    def get_type_repair(self):
-        return Request.objects.filter(subject=Request.REPAIR)
+    def get_type(self):
+        return Request.objects.all()
 
-    def get_type_service(self):
-        return Request.objects.filter(subject=Request.SERVICE)
-
-    def get_type_consultation(self):
-        return Request.objects.filter(subject=Request.CONSULTATION)
-
-    def get_status_open(self):
-        return Request.objects.filter(subject=Request.REPAIR)
-
-    def get_status_work(self):
-        return Request.objects.filter(subject=Request.SERVICE)
-
-    def get_status_close(self):
-        return Request.objects.filter(subject=Request.CONSULTATION)
-
-    def get_all(self):
+    def get_status(self):
         return Request.objects.all()
 
 
