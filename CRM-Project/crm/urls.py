@@ -54,7 +54,7 @@ urlpatterns = [
         name='request_delete'),
     path(
         'send-request-succes/',
-        TemplateView.as_view(template_name='crm/create_request_done.html'),
+        TemplateView.as_view(template_name='clients/create_request_done.html'),
         name='send-request-succes'
     ),
 ]

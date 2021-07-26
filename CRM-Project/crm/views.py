@@ -1,29 +1,27 @@
+from accounts.forms import ClientProfileForm, ProfileForm, UserForm
+from accounts.models import ClientProfile, Profile
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView, DetailView, ListView, TemplateView
 
-from accounts.forms import ClientProfileForm, ProfileForm, UserForm
-from accounts.models import ClientProfile, Profile
-
 from .filters import FilterRequestsDashboardView, FilterRequestsView
 from .forms import ClientSendRequestForm, CreateNewRequestForm, RequestForm
 from .models import Request
 from .telegramm import CHAT_ID, bot_client, logger, send_message
-from django.contrib.auth.mixins import UserPassesTestMixin
 
 User = get_user_model()
 
 
 class IndexView(TemplateView):
-    template_name = 'crm/index.html'
+    template_name = 'index.html'
 
 
 class HomeView(TemplateView):
-    template_name = 'crm/home.html'
+    template_name = 'home.html'
 
 
 class ColleaguesView(LoginRequiredMixin, ListView):
@@ -34,7 +32,7 @@ class ColleaguesView(LoginRequiredMixin, ListView):
 
 class ClientSendRequestView(TemplateView):
     request_form = ClientSendRequestForm
-    template_name = 'crm/create_request.html'
+    template_name = 'clients/create_request.html'
 
     def post(self, request):
         post_data = request.POST or None
@@ -303,4 +301,4 @@ def server_error(request):
 
 
 def forbidden(request, exception):
-    return render(request, 'crm/misc/403.html', status=403)
+    return render(request, 'misc/403.html', status=403)
