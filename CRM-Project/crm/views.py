@@ -205,7 +205,9 @@ class ClientProfileUpdateView(LoginRequiredMixin, TemplateView):
             messages.error(request, 'Профиль клиента успешно обновлен!')
             return redirect('client_profile', client.pk)
 
-        context = self.get_context_data(profile_form=profile_form, client=client)
+        context = self.get_context_data(
+            profile_form=profile_form, client=client
+            )
         return self.render_to_response(context)
 
     def get(self, request, *args, **kwargs):
