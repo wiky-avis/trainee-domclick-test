@@ -11,14 +11,12 @@ class Profile(models.Model):
     REPAIR_SPECIALIST = 'repair'
     SERVICE_SPECIALIST = 'service'
     CONSULTANT_SPECIALIST = 'consultant'
-    ADMIN = 'administrator'
 
     ROLES = [
         (REPAIR_SPECIALIST, 'Специалист по ремонту'),
         (SERVICE_SPECIALIST, 'Специалист по обслуживанию'),
         (CONSULTANT_SPECIALIST, 'Консультант'),
         (USER, 'Пользователь без доступа в CRM'),
-        (ADMIN, 'Администратор')
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -53,6 +51,26 @@ class Profile(models.Model):
     @property
     def is_consultant_specialist(self):
         return self.role == self.CONSULTANT_SPECIALIST
+
+
+class ClientProfile(models.Model):
+    first_name = models.CharField('Имя', max_length=20)
+    last_name = models.CharField('Фамилия', max_length=20)
+    email = models.EmailField('Почта')
+    phone = models.CharField('Телефон', max_length=20)
+    telegram = models.PositiveIntegerField(
+        'Телеграм chat ID',
+        null=True,
+        blank=True,
+        help_text='Введите свой chat ID'
+        )
+
+    class Meta:
+        verbose_name = 'Профиль клиента'
+        verbose_name_plural = 'Профили клиентов'
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
 
 
 @receiver(post_save, sender=User)

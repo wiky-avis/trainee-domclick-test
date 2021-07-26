@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% load crispy_forms_tags %} 
+
+{% block content %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+        <h1 class="h3 mb-0 text-gray-800">Профиль</h1>
+        </div>          
+
+        <!-- Main Content Here -->
+        <div class="row">
+          <div class="col-lg-2"></div>
+          
+          <div class="card o-hidden border-0 shadow-lg my-5 col-lg-5">
+            <div class="card-body">
+                <h2>{{user.first_name}} {{user.last_name}}</h2>
+                <p><strong>Почта: </strong> {{user.email}} </p>
+                <p><strong>Телеграм: </strong> {{user.phone}} </p>
+                <p><strong>Телефон: </strong> {{user.telegram}} </p>
+                <a href="{% url 'client_profile_update' user.pk %}" class="btn btn-sm btn-primary shadow-sm">Обновить Профиль</a>
+                <a href="{% url 'client_profile_delete' user.pk %}" class="btn btn-sm btn-danger shadow-sm">Удалить Профиль</a>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+{% endblock content %}

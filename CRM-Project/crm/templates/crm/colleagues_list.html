@@ -13,13 +13,11 @@
           <div class="row">
 
             <!-- Company Card Example -->
-            {% include 'crm/includes/filter_requests.html' with post=post %}
         <div class="container-fluid">     
 
           <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-               <h3 class="h3 mb-0 text-gray-800">Все Заявки</h3>
-               <a href="{% url 'new_request' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Содать Заявку</a>
+               <h3 class="h3 mb-0 text-gray-800">Все Коллеги</h3>
 
             </div>
             <div class="card-body">
@@ -32,9 +30,7 @@
                       <th>Имя</th>
                       <th>Почта</th>
                       <th>Телефон</th>
-                      <th>Дата получения</th>
-                      <th>Тип заявки</th>
-                      <th>Статус заявки</th>
+                      <th>Должность</th>
                     </tr>
                   </thead>
                   <tfoot>
@@ -42,20 +38,16 @@
                       <th>Имя</th>
                       <th>Почта</th>
                       <th>Телефон</th>
-                      <th>Дата получения</th>
-                      <th>Тип заявки</th>
-                      <th>Статус заявки</th>
+                      <th>Должность</th>
                     </tr>
                   </tfoot>
                   <tbody>
-                    {% for obj in filter.qs %}
+                    {% for obj in object_list %}
                         <tr>
                         <td>{{ obj.first_name }} {{ obj.last_name }}</td>
                         <td>{{ obj.email }}</td>
-                        <td>{{ obj.phone }}</td>
-                        <td>{{ obj.created }}</td>
-                        <td>{{ obj.get_subject_display }}</td>
-                        <td>{{ obj.get_status_display }}</td>
+                        <td>{{ obj.profile.phone }}</td>
+                        <td>{{ obj.profile.get_role_display }}</td>
                         </tr>
                     {% endfor %}
                   </tbody>
@@ -67,9 +59,6 @@
               </div>
             </div>
           </div>
-        
-        
-        
     </div>
     <!-- /.container-fluid -->
 {% endblock content %}

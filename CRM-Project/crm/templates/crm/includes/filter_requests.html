@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="main-toolbar-sorter f-right">
                   <div class="toolbar-sorter">
 
@@ -25,3 +26,19 @@
                       </form>
                   </div>
                 </div>
+=======
+<div class="container-fluid">
+      <div class="card shadow mb-4">
+            
+          <form method="get" name="filter">
+             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                {% for field in filter.form %}
+                        <div><div>{{ field.label }}</div>
+                        <div>{{ field }}</div></div>
+                {% endfor %}
+                <button type="submit">Найти</button>
+             </div>
+          </form>
+      </div>
+    </div>
+>>>>>>> e7cae5ef85cd7e04f6c62690ebeebeee7bb2c538
