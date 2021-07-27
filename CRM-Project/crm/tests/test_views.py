@@ -318,3 +318,25 @@ class CrmPagesTests(TestCase):
             ClientProfile.objects.filter(
                 id=CrmPagesTests.new_client.id).exists()
             )
+
+    def test_update_my_profile(self):
+        form_data = {
+            'phone': '89998880088'
+            }
+        self.user_auth.profile.post(
+            reverse(
+                'profile_update',
+            data=form_data,
+            follow=True
+            )
+
+        response = self.user_auth.get(reverse('profile'))
+
+        profile_object = response.context['user']
+
+        self.assertEqual(
+            profile_object.first_name, CrmPagesTests.user_repair.first_name
+            )
+        self.assertEqual(
+            profile_object.last_name, CrmPagesTests.user_repair.last_name
+            )
