@@ -60,7 +60,7 @@ class ClientSendRequestView(TemplateView):
                     bot_client=bot_client
                     )
             messages.error(request, 'Заявка успешно создана!')
-            return redirect('send-request-succes')
+            return redirect('send_request_succes')
 
         context = self.get_context_data(send_request_form=send_request_form)
         return self.render_to_response(context)
@@ -196,7 +196,7 @@ class ProfileView(LoginRequiredMixin, TemplateView):
 class ProfileUpdateView(LoginRequiredMixin, TemplateView):
     user_form = UserForm
     profile_form = ProfileForm
-    template_name = 'crm/profile-update.html'
+    template_name = 'crm/profile_update.html'
 
     def post(self, request):
         post_data = request.POST or None
@@ -238,7 +238,7 @@ class ClientProfileView(LoginRequiredMixin, TemplateView):
 
 class ClientProfileUpdateView(LoginRequiredMixin, TemplateView):
     profile_form = ClientProfileForm
-    template_name = 'crm/client_profile-update.html'
+    template_name = 'crm/client_profile_update.html'
 
     def post(self, request, pk):
         post_data = request.POST or None

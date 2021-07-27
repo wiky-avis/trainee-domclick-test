@@ -10,7 +10,7 @@ urlpatterns = [
     path(
         'profile-update/',
         views.ProfileUpdateView.as_view(),
-        name='profile-update'
+        name='profile_update'
         ),
     path('profile/', views.ProfileView.as_view(), name='profile'),
     path('clients/', views.ClientsView.as_view(), name='clients'),
@@ -39,11 +39,13 @@ urlpatterns = [
         name='client_send_request'
         ),
     path('requests/', views.RequestsView.as_view(), name='requests'),
-    path('requests/new/', views.CreateRequestView.as_view(), name='new_request'),
+    path(
+        'requests/new/', views.CreateRequestView.as_view(), name='new_request'
+        ),
     path(
         'requests/<int:pk>/',
         views.RequestDetailView.as_view(),
-        name='request-detail'),
+        name='request_detail'),
     path(
         'requests/<int:pk>/update/',
         views.RequestUpdateView.as_view(),
@@ -55,6 +57,6 @@ urlpatterns = [
     path(
         'send-request-succes/',
         TemplateView.as_view(template_name='clients/create_request_done.html'),
-        name='send-request-succes'
+        name='send_request_succes'
     ),
 ]
