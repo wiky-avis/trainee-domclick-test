@@ -23,17 +23,46 @@ class CrmPagesTests(TestCase):
             first_name='Виктория', last_name='Аксентий'
             )
 
+        cls.user_role_isuser = User.objects.create_user(
+            first_name='Петя', last_name='Иванов', username='petya')
+
         cls.request = Request.objects.create(
-            subject=settings.REPAIR_SPECIALIST,
+            subject=settings.REPAIR,
             first_name='Алла',
             last_name='Иванова',
             telegram='1122638601',
             notifications=True,
             description='Текст заявки')
 
+        cls.url_names = [
+            reverse('dashboard'),
+            reverse('profile_update'),
+            reverse('profile'),
+            reverse('clients'),
+            reverse('new_client'),
+            reverse(
+                'client_profile', kwargs={'pk': CrmPagesTests.new_client.pk}
+                ),
+            reverse(
+                'client_profile_update',
+                kwargs={'pk': CrmPagesTests.new_client.pk}
+                ),
+            reverse('colleagues'),
+            reverse('requests'),
+            reverse('new_request'),
+            reverse(
+                'request_detail', kwargs={'pk': CrmPagesTests.request.pk}
+                ),
+            reverse(
+                'request_update', kwargs={'pk': CrmPagesTests.request.pk}
+                ),
+            ]
+
     def setUp(self):
         self.user_auth = Client()
         self.user_auth.force_login(CrmPagesTests.user_repair)
+        self.user_role_isuser = Client()
+        self.user_role_isuser.force_login(CrmPagesTests.user_role_isuser)
 
     def test_pages_uses_correct_template(self):
         templates_url_names = {
@@ -68,6 +97,18 @@ class CrmPagesTests(TestCase):
                 response = self.user_auth.get(url)
                 self.assertTemplateUsed(response, template)
 
+    def test_not_auth_user_not_access_pages(self):
+        for url in CrmPagesTests.url_names:
+            with self.subTest(url=url):
+                response = self.client.get(url)
+                self.assertEqual(response.status_code, HTTPStatus.FOUND)
+
+    def test_auth_user_role_isuser_not_access_pages(self):
+        for url in CrmPagesTests.url_names:
+            with self.subTest(url=url):
+                response = self.user_role_isuser.get(url)
+                self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
+
     def test_new_request_appears_on_pages(self):
         url_pages = (
             reverse('dashboard'),
@@ -84,7 +125,7 @@ class CrmPagesTests(TestCase):
                     )
 
     def test_update_status_request(self):
-        form_data = {'status': 'work'}
+        form_data = {'status': settings.WORK}
         self.user_auth.post(
             reverse(
                 'request_update',
@@ -92,7 +133,6 @@ class CrmPagesTests(TestCase):
             data=form_data,
             follow=True
             )
-        print(CrmPagesTests.request.status)
 
         response = self.user_auth.get(
             reverse(
@@ -100,24 +140,26 @@ class CrmPagesTests(TestCase):
                 kwargs={'pk': CrmPagesTests.request.pk})
             )
 
-        self.assertContains(response, 'work')
+        request_object = response.context['request']
+        self.assertEqual(
+            request_object.status, settings.WORK
+            )
 
     def test_delete_request(self):
         self.user_auth.post(
             reverse(
-                'client_profile_delete',
-                kwargs={'pk': CrmPagesTests.new_client.pk}))
+                'request_delete',
+                kwargs={'pk': CrmPagesTests.request.pk}))
 
         response = self.user_auth.get(
             reverse(
-                'client_profile',
-                kwargs={'pk': CrmPagesTests.new_client.pk})
+                'request_detail',
+                kwargs={'pk': CrmPagesTests.request.pk})
             )
-
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
         self.assertFalse(
-            ClientProfile.objects.filter(
-                id=CrmPagesTests.new_client.id).exists()
+            Request.objects.filter(
+                id=CrmPagesTests.request.id).exists()
             )
 
     def test_page_dashboard_filtering_requests_type_and_status(self):
@@ -248,16 +290,16 @@ class CrmPagesTests(TestCase):
                 'client_profile',
                 kwargs={'pk': CrmPagesTests.new_client.pk})
             )
-        post_object = response.context['user']
+        request_object = response.context['user']
 
         self.assertEqual(
-            post_object.first_name, CrmPagesTests.new_client.first_name
+            request_object.first_name, CrmPagesTests.new_client.first_name
             )
         self.assertEqual(
-            post_object.last_name, CrmPagesTests.new_client.last_name
+            request_object.last_name, CrmPagesTests.new_client.last_name
             )
-        self.assertEqual(post_object.email, CrmPagesTests.new_client.email)
-        self.assertEqual(post_object.phone, CrmPagesTests.new_client.phone)
+        self.assertEqual(request_object.email, CrmPagesTests.new_client.email)
+        self.assertEqual(request_object.phone, CrmPagesTests.new_client.phone)
 
     def test_delete_client_profile(self):
         self.user_auth.post(
