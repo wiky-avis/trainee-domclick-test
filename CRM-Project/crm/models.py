@@ -1,36 +1,20 @@
 from django.db import models
 
+from config import settings
+
 
 class Request(models.Model):
-
-    REPAIR = 'repair'
-    SERVICE = 'service'
-    CONSULTATION = 'consultant'
-
-    OPEN = 'open'
-    WORK = 'work'
-    CLOSE = 'close'
-
-    TYPE = [
-        (REPAIR, 'Заявка на ремонт'),
-        (SERVICE, 'Заявка на обслуживание'),
-        (CONSULTATION, 'Заявка на консультацию'),
-    ]
-
-    STATUS = [
-        (OPEN, 'Открыта'),
-        (WORK, 'В работе'),
-        (CLOSE, 'Закрыта')
-    ]
-
     subject = models.CharField(
         'Тип заявки',
         max_length=20,
-        choices=TYPE,
-        default=CONSULTATION
+        choices=settings.TYPE,
+        default=settings.CONSULTATION
         )
     status = models.CharField(
-        'Статус заявки', max_length=20, choices=STATUS, default=OPEN
+        'Статус заявки',
+        max_length=20,
+        choices=settings.STATUS,
+        default=settings.OPEN
         )
     first_name = models.CharField('Имя', max_length=255)
     last_name = models.CharField('Фамилия', max_length=255)

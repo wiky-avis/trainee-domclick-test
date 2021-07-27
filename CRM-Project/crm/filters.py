@@ -1,23 +1,15 @@
 import django_filters
 from django import forms
 
+from config import settings
+
 from .models import Request
-
-OPEN = 'open'
-WORK = 'work'
-CLOSE = 'close'
-
-STATUS = [
-    (OPEN, 'Открыта'),
-    (WORK, 'В работе'),
-    (CLOSE, 'Закрыта')
-]
 
 
 class FilterRequestsDashboardView(django_filters.FilterSet):
     status = django_filters.MultipleChoiceFilter(
         field_name='status',
-        choices=STATUS,
+        choices=settings.STATUS,
         label=('Статус заявки:')
         )
     specific_date = django_filters.DateFilter(
@@ -47,7 +39,7 @@ class FilterRequestsDashboardView(django_filters.FilterSet):
 class FilterRequestsView(django_filters.FilterSet):
     status = django_filters.MultipleChoiceFilter(
         field_name='status',
-        choices=STATUS,
+        choices=settings.STATUS,
         label=('Статус заявки:')
         )
     specific_date = django_filters.DateFilter(

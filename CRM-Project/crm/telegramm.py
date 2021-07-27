@@ -1,11 +1,9 @@
 import logging
 import logging.config
-import os
 
 import telegram
-from dotenv import load_dotenv
 
-load_dotenv()
+from config import settings
 
 LOGGING_CONFIG = {
     'version': 1,
@@ -34,10 +32,7 @@ logger = logging.getLogger('debug')
 logger.info('Настройка логгирования окончена!')
 
 
-TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
-CHAT_ID = os.getenv('CHAT_ID')
-
-bot_client = telegram.Bot(token=TELEGRAM_TOKEN)
+bot_client = telegram.Bot(token=settings.TELEGRAM_TOKEN)
 
 
 def send_message(message, chat_id, bot_client):

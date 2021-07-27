@@ -3,26 +3,16 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from config import settings
+
 User = get_user_model()
 
 
 class Profile(models.Model):
-    USER = 'user'
-    REPAIR_SPECIALIST = 'repair'
-    SERVICE_SPECIALIST = 'service'
-    CONSULTANT_SPECIALIST = 'consultant'
-
-    ROLES = [
-        (REPAIR_SPECIALIST, 'Специалист по ремонту'),
-        (SERVICE_SPECIALIST, 'Специалист по обслуживанию'),
-        (CONSULTANT_SPECIALIST, 'Консультант'),
-        (USER, 'Пользователь без доступа в CRM'),
-    ]
-
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField('Телефон', max_length=20)
     role = models.CharField(
-        'Роль', max_length=20, choices=ROLES, default=USER)
+        'Роль', max_length=20, choices=settings.ROLES, default=settings.USER)
     photo = models.ImageField(
         'Фото',
         upload_to='users/',
@@ -38,19 +28,19 @@ class Profile(models.Model):
 
     @property
     def is_user(self):
-        return self.role == self.USER
+        return self.role == settings.USER
 
     @property
     def is_repair_specialist(self):
-        return self.role == self.REPAIR_SPECIALIST
+        return self.role == settings.REPAIR_SPECIALIST
 
     @property
     def is_service_specialist(self):
-        return self.role == self.SERVICE_SPECIALIST
+        return self.role == settings.SERVICE_SPECIALIST
 
     @property
     def is_consultant_specialist(self):
-        return self.role == self.CONSULTANT_SPECIALIST
+        return self.role == settings.CONSULTANT_SPECIALIST
 
 
 class ClientProfile(models.Model):

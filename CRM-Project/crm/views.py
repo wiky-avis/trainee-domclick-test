@@ -1,5 +1,3 @@
-from accounts.forms import ClientProfileForm, ProfileForm, UserForm
-from accounts.models import ClientProfile, Profile
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -8,10 +6,14 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView, DetailView, ListView, TemplateView
 
+from accounts.forms import ClientProfileForm, ProfileForm, UserForm
+from accounts.models import ClientProfile, Profile
+from config import settings
+
 from .filters import FilterRequestsDashboardView, FilterRequestsView
 from .forms import ClientSendRequestForm, CreateNewRequestForm, RequestForm
 from .models import Request
-from .telegramm import CHAT_ID, bot_client, logger, send_message
+from .telegramm import bot_client, logger, send_message
 
 User = get_user_model()
 
@@ -54,7 +56,7 @@ class ClientSendRequestView(TemplateView):
                 logger.error(f'Бот столкнулся с ошибкой: {error}')
                 send_message(
                     message='Бот столкнулся с ошибкой',
-                    chat_id=CHAT_ID,
+                    chat_id=settings.CHAT_ID,
                     bot_client=bot_client
                     )
             messages.error(request, 'Заявка успешно создана!')
@@ -147,7 +149,7 @@ class RequestUpdateView(LoginRequiredMixin, TemplateView):
                 logger.error(f'Бот столкнулся с ошибкой: {error}')
                 send_message(
                     message='Бот столкнулся с ошибкой',
-                    chat_id=CHAT_ID,
+                    chat_id=settings.CHAT_ID,
                     bot_client=bot_client
                     )
             messages.error(request, 'Заявка успешно обновлена!')

@@ -1,6 +1,13 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
+CHAT_ID = os.getenv('CHAT_ID')
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-i6o5!@e5(!*exd6xpv7-+)1p!3=k_2#fb6xhsb&*3y*&z6vknt'
@@ -106,3 +113,32 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'home'
+
+USER = 'user'
+REPAIR_SPECIALIST = 'repair'
+SERVICE_SPECIALIST = 'service'
+CONSULTANT_SPECIALIST = 'consultant'
+ROLES = [
+    (REPAIR_SPECIALIST, 'Специалист по ремонту'),
+    (SERVICE_SPECIALIST, 'Специалист по обслуживанию'),
+    (CONSULTANT_SPECIALIST, 'Консультант'),
+    (USER, 'Пользователь без доступа в CRM'),
+]
+
+REPAIR = 'repair'
+SERVICE = 'service'
+CONSULTATION = 'consultant'
+TYPE = [
+    (REPAIR, 'Заявка на ремонт'),
+    (SERVICE, 'Заявка на обслуживание'),
+    (CONSULTATION, 'Заявка на консультацию'),
+]
+
+OPEN = 'open'
+WORK = 'work'
+CLOSE = 'close'
+STATUS = [
+    (OPEN, 'Открыта'),
+    (WORK, 'В работе'),
+    (CLOSE, 'Закрыта')
+]
