@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from .permissions import AccesUserMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -26,7 +26,7 @@ class HomeView(TemplateView):
     template_name = 'home.html'
 
 
-class ColleaguesView(LoginRequiredMixin, ListView):
+class ColleaguesView(AccesUserMixin, ListView):
     model = User
     queryset = User.objects.all()
     template_name = 'crm/colleagues_list.html'
@@ -69,7 +69,7 @@ class ClientSendRequestView(TemplateView):
         return self.post(request, *args, **kwargs)
 
 
-class CreateRequestView(LoginRequiredMixin, TemplateView):
+class CreateRequestView(AccesUserMixin, TemplateView):
     new_request_form = CreateNewRequestForm
     template_name = 'crm/new_request.html'
 
@@ -89,7 +89,7 @@ class CreateRequestView(LoginRequiredMixin, TemplateView):
         return self.post(request, *args, **kwargs)
 
 
-class RequestDeleteView(LoginRequiredMixin, DeleteView):
+class RequestDeleteView(AccesUserMixin, DeleteView):
     model = Request
 
     def post(self, request, pk):
@@ -101,7 +101,7 @@ class RequestDeleteView(LoginRequiredMixin, DeleteView):
         return self.post(request, *args, **kwargs)
 
 
-class RequestsView(LoginRequiredMixin, ListView):
+class RequestsView(AccesUserMixin, ListView):
     model = Request
     queryset = Request.objects.all()
     template_name = 'crm/requests.html'
@@ -116,14 +116,14 @@ class RequestsView(LoginRequiredMixin, ListView):
         return context
 
 
-class RequestDetailView(LoginRequiredMixin, DetailView):
+class RequestDetailView(AccesUserMixin, DetailView):
     model = Request
     queryset = Request.objects.all()
     template_name = 'crm/request_detail.html'
     context_object_name = 'request'
 
 
-class RequestUpdateView(LoginRequiredMixin, TemplateView):
+class RequestUpdateView(AccesUserMixin, TemplateView):
     request_form = RequestForm
     template_name = 'crm/request_update.html'
 
@@ -169,18 +169,10 @@ class RequestUpdateView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class DashboardView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+class DashboardView(AccesUserMixin, ListView):
     model = Request
     queryset = Request.objects.all()
     template_name = 'crm/dashboard.html'
-
-    def test_func(self):
-        return (
-            self.request.user.profile.is_consultant_specialist or
-            self.request.user.profile.is_repair_specialist or
-            self.request.user.profile.is_service_specialist or
-            self.request.user.is_staff
-            )
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -189,11 +181,11 @@ class DashboardView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         return context
 
 
-class ProfileView(LoginRequiredMixin, TemplateView):
+class ProfileView(AccesUserMixin, TemplateView):
     template_name = 'crm/profile.html'
 
 
-class ProfileUpdateView(LoginRequiredMixin, TemplateView):
+class ProfileUpdateView(AccesUserMixin, TemplateView):
     user_form = UserForm
     profile_form = ProfileForm
     template_name = 'crm/profile_update.html'
@@ -221,13 +213,13 @@ class ProfileUpdateView(LoginRequiredMixin, TemplateView):
         return self.post(request, *args, **kwargs)
 
 
-class ClientsView(LoginRequiredMixin, ListView):
+class ClientsView(AccesUserMixin, ListView):
     model = ClientProfile
     queryset = ClientProfile.objects.all()
     template_name = 'crm/clients_list.html'
 
 
-class ClientProfileView(LoginRequiredMixin, TemplateView):
+class ClientProfileView(AccesUserMixin, TemplateView):
     template_name = 'crm/client_profile.html'
 
     def get(self, request, pk, *args, **kwargs):
@@ -236,7 +228,7 @@ class ClientProfileView(LoginRequiredMixin, TemplateView):
         return self.render_to_response(context)
 
 
-class ClientProfileUpdateView(LoginRequiredMixin, TemplateView):
+class ClientProfileUpdateView(AccesUserMixin, TemplateView):
     profile_form = ClientProfileForm
     template_name = 'crm/client_profile_update.html'
 
@@ -259,7 +251,7 @@ class ClientProfileUpdateView(LoginRequiredMixin, TemplateView):
         return self.post(request, *args, **kwargs)
 
 
-class CreateNewClientView(LoginRequiredMixin, TemplateView):
+class CreateNewClientView(AccesUserMixin, TemplateView):
     profile_form = ClientProfileForm
     template_name = 'crm/new_client.html'
 
@@ -279,7 +271,7 @@ class CreateNewClientView(LoginRequiredMixin, TemplateView):
         return self.post(request, *args, **kwargs)
 
 
-class DeleteClientView(LoginRequiredMixin, DeleteView):
+class DeleteClientView(AccesUserMixin, DeleteView):
     model = ClientProfile
 
     def post(self, request, pk):
