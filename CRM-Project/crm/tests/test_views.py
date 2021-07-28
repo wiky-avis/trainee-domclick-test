@@ -1,11 +1,13 @@
+from datetime import date
+from http import HTTPStatus
+
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
+from django.urls import reverse
 
-from crm.models import Request
 from accounts.models import ClientProfile
 from config import settings
-from django.urls import reverse
-from http import HTTPStatus
+from crm.models import Request
 
 User = get_user_model()
 
@@ -141,9 +143,7 @@ class CrmPagesTests(TestCase):
             )
 
         request_object = response.context['request']
-        self.assertEqual(
-            request_object.status, settings.WORK
-            )
+        self.assertEquals(request_object.status, 'work')
 
     def test_delete_request(self):
         self.user_auth.post(
@@ -317,26 +317,4 @@ class CrmPagesTests(TestCase):
         self.assertFalse(
             ClientProfile.objects.filter(
                 id=CrmPagesTests.new_client.id).exists()
-            )
-
-    def test_update_my_profile(self):
-        form_data = {
-            'phone': '89998880088'
-            }
-        self.user_auth.profile.post(
-            reverse(
-                'profile_update',
-            data=form_data,
-            follow=True
-            )
-
-        response = self.user_auth.get(reverse('profile'))
-
-        profile_object = response.context['user']
-
-        self.assertEqual(
-            profile_object.first_name, CrmPagesTests.user_repair.first_name
-            )
-        self.assertEqual(
-            profile_object.last_name, CrmPagesTests.user_repair.last_name
             )
