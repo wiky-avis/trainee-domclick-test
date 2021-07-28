@@ -26,6 +26,10 @@ CRM для регистрации и обработки заявок от кли
     ```
     source venv/Scripts/activate
     ```
+- Установите все необходимые зависимости
+    ```
+    pip install -r requirements.txt
+    ```
 - Перейдите в директорию CRM-Project/
     ```
     cd CRM-Project
@@ -69,3 +73,4 @@ CRM для регистрации и обработки заявок от кли
 
 ## Быстрая демонстрация:
 [![Скринкаст сайта](/images/image.jpg)](https://recordit.co/4Wrk3oaN15)
+
