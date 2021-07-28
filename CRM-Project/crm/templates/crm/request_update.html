@@ -2,6 +2,8 @@
 
 {% load crispy_forms_tags %} 
 
+{% block title %}Django CRM - Заявка № {{ request.pk }}{% endblock title %}
+
 {% block content %}
     <div class='container-fluid'>
         <div class='d-sm-flex align-items-center justify-content-between mb-4 mt-4'>
@@ -14,15 +16,15 @@
               <div class='col-lg-6'>
                 <div class='p-5'>
                   <div class='text-center'>
-                    <h1 class='h4 text-gray-900 mb-4'>Заявка № {{ req.pk }}</h1>
+                    <h1 class='h4 text-gray-900 mb-4'>Заявка № {{ request.pk }}</h1>
                   </div>
                   <div>
-                      <p><strong>Имя: </strong> {{ req.first_name }} </p>
-                      <p><strong>Фамилия: </strong> {{ req.last_name }} </p>
-                      <p><strong>Почта: </strong> {{ req.email }} </p>
-                      <p><strong>Телефон: </strong> {{ req.phone }} </p>
-                      <p><strong>Телеграм: </strong> {{ req.telegram }} </p>
-                      <p><strong>Описание: </strong> {{ req.description }} </p>
+                      <p><strong>Имя: </strong> {{ request.first_name }} </p>
+                      <p><strong>Фамилия: </strong> {{ request.last_name }} </p>
+                      <p><strong>Почта: </strong> {{ request.email }} </p>
+                      <p><strong>Телефон: </strong> {{ request.phone }} </p>
+                      <p><strong>Телеграм: </strong> {{ request.telegram }} </p>
+                      <p><strong>Описание: </strong> {{ request.description }} </p>
                     <form method='POST' enctype='multipart/form-data'>
                       {% csrf_token %}
                       {{request_form | crispy}}
@@ -32,7 +34,7 @@
                   <hr>
                   </div>
                   <div class='text-center'>
-                    <a class='small' href='{% url "request_detail" req.pk %}'>Назад</a>
+                    <a class='small' href='{% url "request_detail" request.pk %}'>Назад</a>
                   </div>
                 </div>
               </div>

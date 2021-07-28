@@ -155,7 +155,7 @@ class RequestUpdateView(AccesUserMixin, TemplateView):
             messages.error(request, 'Заявка успешно обновлена!')
             return redirect('request_update', req.pk)
 
-        context = self.get_context_data(request_form=request_form, req=req)
+        context = self.get_context_data(request_form=request_form, request=req)
         return self.render_to_response(context)
 
     def get(self, request, *args, **kwargs):
