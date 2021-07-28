@@ -1,4 +1,4 @@
-# mi-trainee-domclick-test
+# Django CRM
 Тестовое задание для стажера в ДомКлик.
 
 ## Стек: 
