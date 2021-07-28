@@ -72,5 +72,5 @@ CRM для регистрации и обработки заявок от кли
 Далее кнопки "Изменить пароль" и "Выйти".
 
 ## Быстрая демонстрация:
-[![Скринкаст сайта](/images/image.jpg)](https://recordit.co/4Wrk3oaN15)
+[![Скринкаст сайта](/CRM-Project/images/image.jpg)](https://recordit.co/4Wrk3oaN15)
 
