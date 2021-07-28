@@ -155,18 +155,11 @@ class RequestUpdateView(AccesUserMixin, TemplateView):
             messages.error(request, 'Заявка успешно обновлена!')
             return redirect('request_update', req.pk)
 
-        context = self.get_context_data(request_form=request_form)
+        context = self.get_context_data(request_form=request_form, req=req)
         return self.render_to_response(context)
 
     def get(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['request'] = get_object_or_404(
-            Request, pk=self.kwargs.get('pk')
-            )
-        return context
 
 
 class DashboardView(AccesUserMixin, ListView):
