@@ -6,7 +6,7 @@ cffi==1.14.6
 charset-normalizer==2.0.3
 cryptography==3.4.7
 defusedxml==0.7.1
-Django==3.2.5
+Django==3.2.13
 django-cleanup==5.2.0
 django-crispy-forms==1.12.0
 django-filter==2.4.0
