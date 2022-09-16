@@ -20,7 +20,7 @@ flake8-return==1.1.3
 idna==3.2
 isort==5.9.2
 mccabe==0.6.1
-oauthlib==3.1.1
+oauthlib==3.2.1
 pep8-naming==0.12.0
 Pillow==8.3.1
 pycodestyle==2.7.0
