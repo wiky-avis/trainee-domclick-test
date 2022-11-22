@@ -22,7 +22,7 @@ isort==5.9.2
 mccabe==0.6.1
 oauthlib==3.1.1
 pep8-naming==0.12.0
-Pillow==8.3.1
+Pillow==9.3.0
 pycodestyle==2.7.0
 pycparser==2.20
 pyflakes==2.3.1
